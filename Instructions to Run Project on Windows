@@ -1,4 +1,4 @@
-Steps for 
+Steps for running the GUI on Windows w/ sql server management studio
 1. Make sure you have python installed. Use Python 3.10.11
 2. Pip install pyodbc using ' pip install pyodbc '
 3. Connect your database to your IDE. This is how I connected it on my Windows machine, to get the 'DRIVER' I used this command in powershell: Get-OdbcDriver | Select-Object Name

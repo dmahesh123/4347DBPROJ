@@ -2,15 +2,16 @@ import pyodbc
 import tkinter as tk
 from tkinter import messagebox, ttk
 
-# Set up the database connection
+# Database connection setup
 conn = pyodbc.connect(
-    'DRIVER={YOUR SERVER HERE};'
-    'SERVER=YOURSERVER;'
-    'DATABASE=YOURDB NAME;'
-    'Trusted_Connection=yes;'
+    'DRIVER={MySQL ODBC 9.1 Unicode Driver};'
+    'SERVER=localhost;'
+    'PORT=3306;'
+    'DATABASE=new_schema;'
+    'USER=root;'
+    'PASSWORD=aaaa;'
 )
 cursor = conn.cursor()
-
 
 # Fetch available UserIDs from Users table
 def fetch_user_ids():
@@ -20,8 +21,9 @@ def fetch_user_ids():
 
 # Fetch next available CraftID
 def get_next_craft_id():
-    cursor.execute("SELECT ISNULL(MAX(CraftID), 0) + 1 FROM Craft")
+    cursor.execute("SELECT IFNULL(MAX(CraftID), 0) + 1 FROM Craft")
     return cursor.fetchone()[0]
+
 
 
 # Define function for inserting a craft
@@ -72,11 +74,31 @@ def insert_craft():
         conn.rollback()
         messagebox.showerror("Database Error", f"Error inserting craft: {str(e)}")
 
+# Define function for deleting a craft by CraftName
+def delete_craft():
+    craft_name = delete_name_entry.get()
+    if not craft_name:
+        messagebox.showerror("Error", "Craft Name is required for deletion!")
+        return
+
+    try:
+        cursor.execute("DELETE FROM Craft WHERE CraftName = ?", (craft_name,))
+        conn.commit()
+        if cursor.rowcount > 0:
+            messagebox.showinfo("Success", f"Craft idea '{craft_name}' deleted successfully!")
+            delete_name_entry.delete(0, tk.END)
+        else:
+            messagebox.showwarning("Not Found", f"No craft found with name '{craft_name}'.")
+
+    except pyodbc.Error as e:
+        conn.rollback()
+        messagebox.showerror("Database Error", f"Error deleting craft: {str(e)}")
+
 
 # Tkinter GUI setup
 root = tk.Tk()
 root.title("Craft Ideas Database Operations")
-root.geometry("400x500")
+root.geometry("400x700")
 
 # Main frame with padding
 main_frame = tk.Frame(root, padx=20, pady=20)
@@ -136,6 +158,31 @@ insert_button = tk.Button(
 )
 insert_button.pack(pady=20)
 
+# Delete section title and entry below the Add Craft button
+delete_label = tk.Label(main_frame, text="Delete Craft", font=('Arial', 14, 'bold'))
+delete_label.pack(pady=(20, 10))
+
+# Craft Name label for delete
+tk.Label(main_frame, text="Craft Name to Delete:").pack(anchor='w')
+
+# Craft Name input for delete
+delete_name_entry = tk.Entry(main_frame)
+delete_name_entry.pack(fill=tk.X, pady=(0, 10))
+
+# Delete button
+delete_button = tk.Button(
+    main_frame,
+    text="Delete Craft",
+    command=delete_craft,
+    bg='#F44336',
+    fg='white',
+    font=('Arial', 10, 'bold'),
+    padx=20,
+    pady=5
+)
+delete_button.pack(pady=10)
+
+# Start the Tkinter main loop
 root.mainloop()
 
 # Close the connection when done

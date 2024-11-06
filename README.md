@@ -5,11 +5,11 @@
 ---
 ### MySQL Workbench
  1. Delete the default main.py and rename main(mysql).py to main.py
- 2. Change the user, password, and database fields to what you are using
+ 2. Change the user, password, and database fields near the top of the file to what you are using. What is present is what we used.
  3. Run the command `pip install mysql-connector-python` in the terminal within the same directory as main.py
 ### SQL Server Management Studio
  1.  Download Download ODBC Driver for SQL Server from Microsoft
- 2. Change the driver, server, and database fields to what you are using
+ 2. Change the driver, server, and database fields near the top of the file to what you are using
  3. Run the command `pip install pyodbc` in the terminal within the same directory as main.py
 ---
 2. Run the program

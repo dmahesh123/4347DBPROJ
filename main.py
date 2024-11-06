@@ -4,9 +4,9 @@ from tkinter import messagebox, ttk
 
 # Set up the database connection
 conn = pyodbc.connect(
-    'DRIVER={ADD YOUR DRIVER HERE};'
-    'SERVER=ADD YOUR SERVER HERE;'
-    'DATABASE=ADD THE NAME OF YOUR DB;'
+    'DRIVER={YOUR SERVER HERE};'
+    'SERVER=YOURSERVER;'
+    'DATABASE=YOURDB NAME;'
     'Trusted_Connection=yes;'
 )
 cursor = conn.cursor()
@@ -14,75 +14,127 @@ cursor = conn.cursor()
 
 # Fetch available UserIDs from Users table
 def fetch_user_ids():
-    cursor.execute("SELECT UserID FROM Users")
+    cursor.execute("SELECT UserID FROM Users ORDER BY UserID")
     return [row.UserID for row in cursor.fetchall()]
+
+
+# Fetch next available CraftID
+def get_next_craft_id():
+    cursor.execute("SELECT ISNULL(MAX(CraftID), 0) + 1 FROM Craft")
+    return cursor.fetchone()[0]
 
 
 # Define function for inserting a craft
 def insert_craft():
-    user_id = user_id_var.get()
-    craft_name = insert_name_entry.get()
-    difficulty_level = insert_difficulty_entry.get()
-    estimated_time = int(insert_time_entry.get())
-    age_range = insert_age_entry.get()
+    try:
+        craft_id = get_next_craft_id()
+        user_id = user_id_var.get()
+        craft_name = insert_name_entry.get()
+        difficulty_level = difficulty_var.get()
 
-    cursor.execute("""
-        INSERT INTO Craft (UserID, CraftName, DifficultyLevel, EstimatedTime, AgeRange)
-        VALUES (?, ?, ?, ?, ?)
-    """, (user_id, craft_name, difficulty_level, estimated_time, age_range))
-    conn.commit()
-    messagebox.showinfo("Insert", "Craft idea inserted successfully!")
+        # Validate estimated time input
+        try:
+            estimated_time = int(insert_time_entry.get())
+            # Validate time is within reasonable range
+            if estimated_time <= 0 or estimated_time > 180:  # max 3 hours
+                messagebox.showerror("Error", "Estimated time must be between 1 and 180 minutes!")
+                return
+        except ValueError:
+            messagebox.showerror("Error", "Estimated time must be a number!")
+            return
+
+        age_range = insert_age_entry.get()
+        # Validate age range format
+        if not (age_range.count('-') == 1 and all(part.strip().isdigit() for part in age_range.split('-'))):
+            messagebox.showerror("Error", "Age range must be in format 'X-Y' (e.g., '5-10')")
+            return
+
+        # Validate required fields
+        if not all([user_id, craft_name, difficulty_level, estimated_time, age_range]):
+            messagebox.showerror("Error", "All fields are required!")
+            return
+
+        cursor.execute("""
+            INSERT INTO Craft (CraftID, UserID, CraftName, DifficultyLevel, EstimatedTime, AgeRange)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (craft_id, user_id, craft_name, difficulty_level, estimated_time, age_range))
+        conn.commit()
+        messagebox.showinfo("Success", f"Craft idea '{craft_name}' inserted successfully with ID {craft_id}!")
+
+        # Clear the form
+        insert_name_entry.delete(0, tk.END)
+        difficulty_var.set('')  # Clear difficulty selection
+        insert_time_entry.delete(0, tk.END)
+        insert_age_entry.delete(0, tk.END)
+        user_id_var.set('')
+
+    except pyodbc.Error as e:
+        conn.rollback()
+        messagebox.showerror("Database Error", f"Error inserting craft: {str(e)}")
 
 
 # Tkinter GUI setup
 root = tk.Tk()
 root.title("Craft Ideas Database Operations")
-root.geometry("400x400")
+root.geometry("400x500")
 
-# Insert Section
-insert_frame = tk.Frame(root, padx=10, pady=10)
-insert_frame.pack(pady=5)
+# Main frame with padding
+main_frame = tk.Frame(root, padx=20, pady=20)
+main_frame.pack(fill=tk.BOTH, expand=True)
 
-tk.Label(insert_frame, text="Insert Craft Idea").grid(row=0, column=0, columnspan=2)
+# Title
+title_label = tk.Label(main_frame, text="Add New Craft", font=('Arial', 14, 'bold'))
+title_label.pack(pady=(0, 20))
 
-
-# CraftID selection
-tk.Label(insert_frame, text="Craft ID:").grid(row=1, column=0)
-craft_id_var = tk.StringVar()
-craft_id_drop = ttk.Combobox(insert_frame, textvariable=craft_id_var)
-craft_id_drop['values'] = fetch_user_ids()
-craft_id_drop.grid(row=1, column=1)
+# Create a frame for the form with proper spacing
+form_frame = tk.Frame(main_frame)
+form_frame.pack(fill=tk.X)
 
 # UserID selection
-tk.Label(insert_frame, text="User ID:").grid(row=2, column=0)
+tk.Label(form_frame, text="User ID:").pack(anchor='w')
 user_id_var = tk.StringVar()
-user_id_dropdown = ttk.Combobox(insert_frame, textvariable=user_id_var)
+user_id_dropdown = ttk.Combobox(form_frame, textvariable=user_id_var, state='readonly')
 user_id_dropdown['values'] = fetch_user_ids()
-user_id_dropdown.grid(row=2, column=1)
+user_id_dropdown.pack(fill=tk.X, pady=(0, 10))
 
 # Craft Name input
-tk.Label(insert_frame, text="Craft Name:").grid(row=3, column=0)
-insert_name_entry = tk.Entry(insert_frame)
-insert_name_entry.grid(row=3, column=1)
+tk.Label(form_frame, text="Craft Name:").pack(anchor='w')
+insert_name_entry = tk.Entry(form_frame)
+insert_name_entry.pack(fill=tk.X, pady=(0, 10))
 
-# Difficulty Level input
-tk.Label(insert_frame, text="Difficulty Level:").grid(row=4, column=0)
-insert_difficulty_entry = tk.Entry(insert_frame)
-insert_difficulty_entry.grid(row=4, column=1)
+# Difficulty Level input with predefined values
+tk.Label(form_frame, text="Difficulty Level:").pack(anchor='w')
+difficulty_var = tk.StringVar()
+difficulty_dropdown = ttk.Combobox(form_frame, textvariable=difficulty_var, state='readonly')
+difficulty_dropdown['values'] = ['Easy', 'Medium', 'Hard']
+difficulty_dropdown.pack(fill=tk.X, pady=(0, 10))
 
 # Estimated Time input
-tk.Label(insert_frame, text="Estimated Time (mins):").grid(row=5, column=0)
-insert_time_entry = tk.Entry(insert_frame)
-insert_time_entry.grid(row=5, column=1)
+tk.Label(form_frame, text="Estimated Time (minutes):").pack(anchor='w')
+insert_time_entry = tk.Entry(form_frame)
+insert_time_entry.pack(fill=tk.X, pady=(0, 10))
 
 # Age Range input
-tk.Label(insert_frame, text="Age Range:").grid(row=6, column=0)
-insert_age_entry = tk.Entry(insert_frame)
-insert_age_entry.grid(row=6, column=1)
+tk.Label(form_frame, text="Age Range (e.g., 5-10):").pack(anchor='w')
+insert_age_entry = tk.Entry(form_frame)
+insert_age_entry.pack(fill=tk.X, pady=(0, 10))
+
+# Info label for age range format
+age_info = tk.Label(form_frame, text="Format: minimum-maximum (e.g., 5-10)", font=('Arial', 8), fg='gray')
+age_info.pack(anchor='w', pady=(0, 10))
 
 # Insert button
-insert_button = tk.Button(insert_frame, text="Insert", command=insert_craft)
-insert_button.grid(row=7, column=0, columnspan=2)
+insert_button = tk.Button(
+    form_frame,
+    text="Add Craft",
+    command=insert_craft,
+    bg='#4CAF50',
+    fg='white',
+    font=('Arial', 10, 'bold'),
+    padx=20,
+    pady=5
+)
+insert_button.pack(pady=20)
 
 root.mainloop()
 

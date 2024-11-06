@@ -5,12 +5,11 @@ from tkinter import messagebox, ttk
 # Set up the MySQL database connection
 conn = mysql.connector.connect(
     host="localhost",    # Use "localhost" if running on the same machine
-    user="root",         # MySQL username
-    password="apple",  # MySQL password 
-    database="project"   # Database name
+    user="root",         # MySQL username (CHANGE THIS)
+    password="apple",  # MySQL password (CHANGE THIS)
+    database="project"   # Database name (CHANGE THIS)
 )
 cursor = conn.cursor()
-
 
 
 # Fetch available UserIDs from Users table
@@ -69,7 +68,7 @@ def insert_craft():
         insert_age_entry.delete(0, tk.END)
         user_id_var.set('')
 
-    except pyodbc.Error as e:
+    except mysql.connector.Error as e:
         conn.rollback()
         messagebox.showerror("Database Error", f"Error inserting craft: {str(e)}")
 

@@ -14,11 +14,9 @@
 ---
 2. Run the program
 
+## CS4347 Project Deliverable Description
 
-CS4347 Project Deliverables 
-Description
-
-Project Title: EcoCraft
+Project Title: **EcoCraft**
 
 GitHub Repository Details:
 Repository Title: 4347DBPROJ

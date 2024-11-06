@@ -13,6 +13,7 @@ conn = pyodbc.connect(
 )
 cursor = conn.cursor()
 
+
 # Fetch available UserIDs from Users table
 def fetch_user_ids():
     cursor.execute("SELECT UserID FROM Users ORDER BY UserID")
@@ -23,7 +24,6 @@ def fetch_user_ids():
 def get_next_craft_id():
     cursor.execute("SELECT IFNULL(MAX(CraftID), 0) + 1 FROM Craft")
     return cursor.fetchone()[0]
-
 
 
 # Define function for inserting a craft
@@ -74,6 +74,7 @@ def insert_craft():
         conn.rollback()
         messagebox.showerror("Database Error", f"Error inserting craft: {str(e)}")
 
+
 # Define function for deleting a craft by CraftName
 def delete_craft():
     craft_name = delete_name_entry.get()
@@ -95,10 +96,60 @@ def delete_craft():
         messagebox.showerror("Database Error", f"Error deleting craft: {str(e)}")
 
 
+# Define function for updating a craft
+def update_craft():
+    craft_name = update_name_entry.get()
+    difficulty_level = update_difficulty_var.get()
+    estimated_time = update_time_entry.get()
+    age_range = update_age_entry.get()
+
+    if not craft_name:
+        messagebox.showerror("Error", "Craft Name is required for updating!")
+        return
+
+    try:
+        estimated_time = int(estimated_time)
+        if estimated_time <= 0 or estimated_time > 180:
+            messagebox.showerror("Error", "Estimated time must be between 1 and 180 minutes!")
+            return
+    except ValueError:
+        messagebox.showerror("Error", "Estimated time must be a number!")
+        return
+
+    if not (age_range.count('-') == 1 and all(part.strip().isdigit() for part in age_range.split('-'))):
+        messagebox.showerror("Error", "Age range must be in format 'X-Y' (e.g., '5-10')")
+        return
+
+    if not all([craft_name, difficulty_level, estimated_time, age_range]):
+        messagebox.showerror("Error", "All fields are required!")
+        return
+
+    try:
+        cursor.execute("""
+            UPDATE Craft
+            SET DifficultyLevel = ?, EstimatedTime = ?, AgeRange = ?
+            WHERE CraftName = ?
+        """, (difficulty_level, estimated_time, age_range, craft_name))
+        conn.commit()
+
+        if cursor.rowcount > 0:
+            messagebox.showinfo("Success", f"Craft '{craft_name}' updated successfully!")
+            update_name_entry.delete(0, tk.END)
+            update_difficulty_var.set('')
+            update_time_entry.delete(0, tk.END)
+            update_age_entry.delete(0, tk.END)
+        else:
+            messagebox.showwarning("Not Found", f"No craft found with name '{craft_name}'.")
+
+    except pyodbc.Error as e:
+        conn.rollback()
+        messagebox.showerror("Database Error", f"Error updating craft: {str(e)}")
+
+
 # Tkinter GUI setup
 root = tk.Tk()
 root.title("Craft Ideas Database Operations")
-root.geometry("400x700")
+root.geometry("400x950")
 
 # Main frame with padding
 main_frame = tk.Frame(root, padx=20, pady=20)
@@ -181,6 +232,45 @@ delete_button = tk.Button(
     pady=5
 )
 delete_button.pack(pady=10)
+
+# Update section in the GUI
+update_label = tk.Label(main_frame, text="Update Craft", font=('Arial', 14, 'bold'))
+update_label.pack(pady=(20, 10))
+
+# Craft Name input for update
+tk.Label(main_frame, text="Craft Name to Update:").pack(anchor='w')
+update_name_entry = tk.Entry(main_frame)
+update_name_entry.pack(fill=tk.X, pady=(0, 10))
+
+# Difficulty Level input for update
+tk.Label(main_frame, text="New Difficulty Level:").pack(anchor='w')
+update_difficulty_var = tk.StringVar()
+update_difficulty_dropdown = ttk.Combobox(main_frame, textvariable=update_difficulty_var, state='readonly')
+update_difficulty_dropdown['values'] = ['Easy', 'Medium', 'Hard']
+update_difficulty_dropdown.pack(fill=tk.X, pady=(0, 10))
+
+# Estimated Time input for update
+tk.Label(main_frame, text="New Estimated Time (minutes):").pack(anchor='w')
+update_time_entry = tk.Entry(main_frame)
+update_time_entry.pack(fill=tk.X, pady=(0, 10))
+
+# Age Range input for update
+tk.Label(main_frame, text="New Age Range (e.g., 5-10):").pack(anchor='w')
+update_age_entry = tk.Entry(main_frame)
+update_age_entry.pack(fill=tk.X, pady=(0, 10))
+
+# Update button
+update_button = tk.Button(
+    main_frame,
+    text="Update Craft",
+    command=update_craft,
+    bg='#FFA500',
+    fg='white',
+    font=('Arial', 10, 'bold'),
+    padx=20,
+    pady=5
+)
+update_button.pack(pady=20)
 
 # Start the Tkinter main loop
 root.mainloop()

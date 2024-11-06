@@ -1,4 +1,20 @@
 # 4347DBPROJ
+
+## Setup on Windows
+1. Execute the ecocraft.sql script on either MySQL or SQL Server Management Studio
+---
+### MySQL Workbench
+ 1. Delete the default main.py and rename main(mysql).py to main.py
+ 2. Change the user, password, and database fields to what you are using
+ 3. Run the command `pip install mysql-connector-python` in the terminal within the same directory as main.py
+### SQL Server Management Studio
+ 1.  Download Download ODBC Driver for SQL Server from Microsoft
+ 2. Change the driver, server, and database fields to what you are using
+ 3. Run the command `pip install pyodbc` in the terminal within the same directory as main.py
+---
+2. Run the program
+
+
 CS4347 Project Deliverables 
 Description
 
@@ -63,3 +79,4 @@ October 15th - Use SQL for the “Create your Database and Populate” and “Da
 Implement the database using SQL to populate the tables and develop queries for our system. 
 
 October 16th - Finalize Deliverable 1 and get ready to submit. 
+

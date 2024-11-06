@@ -1,7 +1,6 @@
 import pyodbc
 import tkinter as tk
 from tkinter import messagebox, ttk
-
 # Set up the database connection
 conn = pyodbc.connect(
     'DRIVER={PostgreSQL};'
@@ -16,12 +15,11 @@ cursor = conn.cursor()
 # Fetch available UserIDs from Users table
 def fetch_user_ids():
     cursor.execute("SELECT UserID FROM Users ORDER BY UserID")
-    return [row.UserID for row in cursor.fetchall()]
-
+    return [row[0] for row in cursor.fetchall()]
 
 # Fetch next available CraftID
 def get_next_craft_id():
-    cursor.execute("SELECT ISNULL(MAX(CraftID), 0) + 1 FROM Craft")
+    cursor.execute("SELECT COALESCE(MAX(CraftID), 0) + 1 FROM Craft")
     return cursor.fetchone()[0]
 
 

@@ -1,0 +1,17 @@
+import tkinter as tk
+from tkinter import ttk
+
+def fetch_craft_ids():
+    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]  # Sample data
+
+root = tk.Tk()
+root.title("Test Dropdown")
+root.geometry("300x200")
+
+craft_id_var = tk.StringVar()
+craft_id_dropdown = ttk.Combobox(root, textvariable=craft_id_var, state='readonly')
+craft_id_dropdown['values'] = fetch_craft_ids()
+craft_id_var.set("Select Craft ID")  # Placeholder text
+craft_id_dropdown.pack(pady=20)
+
+root.mainloop()

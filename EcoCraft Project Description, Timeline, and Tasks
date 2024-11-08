@@ -13,7 +13,7 @@ Repository Link: https://github.com/dmahesh123/4347DBPROJ
 Team Members: Dharshini Mahesh, Amina Haque, Laurenne Oliver, Waseef Kabir, Momo Qais, Arhum Khan, Mohammad Islam 
 
 
-Delegation of Tasks: 
+Delegation of Tasks for deliverable 1: 
 Momo, Amina, and Laurenne worked to complete the “Introduction” section of Deliverable 1.
 
 Dharshini, Mohammad, Waseef, and Arhum worked on the “Background and Related Work” section of Deliverable 1. 
@@ -27,12 +27,31 @@ Momo worked on the “Create your Database and Populate” and “Database Query
 Dharshini worked on the “References” and “Description” sections of Deliverable 1. 
 
 
+Delegation of Tasks for deliverable 2: 
+Delegation of Tasks for Deliverable 2: 
+
+Dharshini worked on the submission and GitHub commits.
+
+Waseef and Mohammad worked on  the normalization of EER Conceptual Data Model and drawing the dependency diagrams for the initial and normalized 3NF relations.
+
+Amina worked on the relational data model design using the normalized EER diagram. 
+
+Momo worked on creating the CREATE VIEW on the database. 
+
+Dharshini worked on normalzing and populating the database in the SQL platform and worked on the database query execution on the normalized database to query, insert, delete, and update. 
+
+Dharshini, Waseef, Arhum and Laurenne worked on the user interface together and create a Python GUI to query, insert, delete, update and quit the application.
+
+Amina and Momo worked on the final report and future work for this project and the presentation slides.
+
+Amina and Laurenne worked on the conclusion and references for this report.
+
 
 Description and Motivation of EcoCraft:
 	The main motivation behind our project is to reduce waste in a fun and creative way by using a database of creative arts and crafts projects, mainly using recycled materials
 In today’s world, sustainability is a growing concern and waste management is a critical issue. This project can take small actions, like turning discarded items into art, which in turn can make a significant impact over time, especially for the younger generation. By fostering creativity and encouraging the use of recycled materials, we aim to promote environmental consciousness in an engaging and educational way. We expect that the database design can be used in places such as schools or at home where children can create craft ideas with materials that already exist. Teachers and parents can integrate these projects and teach students the importance of upcycling and reusing materials. This can additionally be used in community centers, summer camps, and anywhere where children can unleash their potential. The system can also serve as a useful tool for environmental organizations or workshops focused on sustainability to enable creative ways of reducing waste. 
 
-Project timeline: 
+Project timeline for deliverable 1: 
 October 18th - Complete the “Final Project Proposal” with all the group members. 
 
 Collaborated as a group to define the scope and goals of our project by brainstorming and collectively agreeing on the purpose of our project.
@@ -63,3 +82,28 @@ October 15th - Use SQL for the “Create your Database and Populate” and “Da
 Implement the database using SQL to populate the tables and develop queries for our system. 
 
 October 16th - Finalize Deliverable 1 and get ready to submit. 
+
+Project timeline for Deliverable 2: 
+
+October 25th - Start drafting tasks to group members and finish assigning tasks to pairs. 
+
+October 28th - Completed normalization of EER conceptual model and normalize diagrams to create dependency relations.
+
+October 30th - Completed the relational data model design using the normalized EER diagram.
+
+November 1st - Created the normalized database and populate it.
+
+November 4th - Completed the database query execution on the normalized database. Query, insert, delete, and update using the normalized database.
+
+November 10th - Finished the GUI for our application in python.
+
+
+November 11th - Finished the conclusion, future work, and references section.
+
+November 12th - Completed the report and presentation slides. 
+
+November 13th - Submit deliverable 2.
+
+
+
+

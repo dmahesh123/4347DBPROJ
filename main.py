@@ -1,13 +1,13 @@
-import pyodbc
+import mysql.connector
 import tkinter as tk
 from tkinter import messagebox, ttk
 
-# make sure to use your own values in order to set up the connection
-conn = pyodbc.connect(
-    'DRIVER={YOUR DRIVER HERE};'
-    'SERVER=YOUR SERVER HERE;'
-    'DATABASE=YOUR DATABASE NAME HERE, our SQL is in EcoCraft.sql;'
-    'Trusted_Connection=yes;'
+# Set up the MySQL database connection
+conn = mysql.connector.connect(
+    host="localhost",    # Use "localhost" if running on the same machine
+    user="root",         # MySQL username (CHANGE THIS)
+    password="apple",  # MySQL password (CHANGE THIS)
+    database="project"   # Database name (CHANGE THIS)
 )
 cursor = conn.cursor()
 
@@ -60,7 +60,7 @@ def query_crafts_by_difficulty(difficulty):
             tree.insert('', 'end', values=(craft.CraftName, craft.EstimatedTime,
                                            craft.AgeRange, craft.Theme, craft.UserName))
 
-    except pyodbc.Error as e:
+    except mysql.connector.Error as e:
         messagebox.showerror("Database Error", f"Error querying crafts: {str(e)}")
 
 
@@ -116,7 +116,7 @@ def insert_craft():
         clear_form()
 
 
-    except pyodbc.Error as e:
+    except mysql.connector.Error as e:
         conn.rollback()
         messagebox.showerror("Database Error", f"Error inserting craft: {str(e)}")
 
@@ -162,7 +162,7 @@ def delete_craft():
             messagebox.showwarning("Not Found", f"No craft found with name '{craft_name}'.")
 
 
-    except pyodbc.Error as e:
+    except mysql.connector.Error as e:
         conn.rollback()
         messagebox.showerror("Database Error", f"Error deleting craft: {str(e)}")
 
@@ -208,7 +208,7 @@ def update_craft():
         update_time_entry.delete(0, tk.END)
         update_age_entry.delete(0, tk.END)
 
-    except pyodbc.Error as e:
+    except mysql.connector.Error as e:
         conn.rollback()
         messagebox.showerror("Database Error", f"Error updating craft: {str(e)}")
 

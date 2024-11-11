@@ -4,10 +4,11 @@ from tkinter import messagebox, ttk
 
 # make sure to use your own values in order to set up the connection
 conn = pyodbc.connect(
-    'DRIVER={YOUR DRIVER HERE};'
-    'SERVER=YOUR SERVER HERE;'
-    'DATABASE=YOUR DATABASE NAME HERE, our SQL is in EcoCraft.sql;'
-    'Trusted_Connection=yes;'
+    'DRIVER={PostgreSQL};'
+    'SERVER=localhost;'
+    'DATABASE=ecocraft;'
+    'UID=postgres;'
+    'PWD=lolo;'
 )
 cursor = conn.cursor()
 

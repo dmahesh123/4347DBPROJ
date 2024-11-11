@@ -3,13 +3,14 @@ Please follow these steps to set up and run the EcoCraft program
 
 1. Verify that Python 3.10.11 is installed on your machine. To check you can use 
 Python --version
+Also, make sure that you have SQL Server management studio running in order to use our database definitions and populated tables.
 
 2. Install the required packages to run this program. Using PowerShell/terminal, pip install pyodbc by running pip install pyodbc.
 
 Confirm the installation using 
 pip show pyodbc
 
-3. Set up database connection to your IDE. Open PowerShell and run this command to identify the available ODBC drivers on your machine:
+3. Set up a database connection to your IDE. Open PowerShell and run this command to identify the available ODBC drivers on your machine:
 Get-OdbcDriver | Select-Object Name
 
 Make note of this driver name and update it in the connection code for step 5. Also, make note of your machine's server and database name to create the connection. 

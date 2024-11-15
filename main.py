@@ -4,11 +4,16 @@ from tkinter import messagebox, ttk
 
 # make sure to use your own values in order to set up the connection
 conn = pyodbc.connect(
-    'DRIVER={YOUR DRIVER HERE};'
-    'SERVER=YOUR SERVER HERE;'
-    'DATABASE=YOUR DATABASE NAME HERE, our SQL is in EcoCraft.sql;'
+    # This is mine "ODBC Driver 17 for SQL Server"
+    'DRIVER={ODBC Driver 17 for SQL Server};'
+    # This is what my server looks like "DESKTOP-#######"
+    'SERVER=DESKTOP-#######;'
+    # This is what my DB sql file is named EcoCraft, so I will put "EcoCraft" for DATABASE
+    'DATABASE=EcoCraft;'
     'Trusted_Connection=yes;'
 )
+
+cursor = conn.cursor()
 cursor = conn.cursor()
 
 

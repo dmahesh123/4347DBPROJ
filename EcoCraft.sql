@@ -77,7 +77,7 @@ CREATE TABLE EducationalCraft (
     CraftID INT PRIMARY KEY,
     FOREIGN KEY (CraftID) REFERENCES Craft(CraftID)
 );
-Select * from EducationalCraft;
+
 
 INSERT INTO Users (UserID, UserType, UserName, Email)
 VALUES
@@ -175,44 +175,6 @@ VALUES
 (9, 2, 1),
 (10, 9, 1);
 
-INSERT INTO Supervises (SupervisorID, SupervisedID)
-VALUES
-(1, 2),
-(3, 5),
-(4, 6),
-(1, 8),
-(7, 10),
-(1, 9),
-(6, 8),
-(9, 10),
-(4, 7),
-(3, 4);
-
-INSERT INTO RecyclingCenter (CenterID, CenterName, Location)
-VALUES
-(1, 'City Recycling Center', 'Downtown'),
-(2, 'Green Earth Recycling', 'Suburbs'),
-(3, 'Eco Friendly Recycling', 'Uptown'),
-(4, 'Neighborhood Recycling', 'Residential Area'),
-(5, 'Community Recycling', 'Park Area'),
-(6, 'Reclaim and Recycle', 'Industrial Zone'),
-(7, 'Planet Care Recycling', 'City Outskirts'),
-(8, 'GreenCycle', 'Main Street'),
-(9, 'Future Earth Recycling', 'Town Center'),
-(10, 'Clean Earth Recycling', 'Rural Area');
-
-INSERT INTO Recycles (MaterialID, CenterID)
-VALUES
-(1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5),
-(6, 6),
-(7, 7),
-(8, 8),
-(9, 9),
-(10, 10);
 
 INSERT INTO SeasonalCraft (CraftID)
 VALUES
